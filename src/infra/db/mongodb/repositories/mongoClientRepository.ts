@@ -1,6 +1,6 @@
-import { Client } from "../../../domain/entities/Client";
-import { IBaseRepository } from "../../../shared/base/baseRepository";
-import { clientModel } from "./ClientModel";
+import { Client } from "../../../../domain/entities/Client";
+import { IBaseRepository } from "../../../../shared/base/baseRepository";
+import { clientModel } from "../ClientModel";
 
 export class ClientRepository implements IBaseRepository<Client> {
   async create(item: Client): Promise<void> {
