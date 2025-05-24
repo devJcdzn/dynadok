@@ -13,9 +13,15 @@ export class ClientRepository implements IBaseRepository<Client> {
     });
   }
 
-  async findById(id: string): Promise<Client> {
+  async findById(id: string): Promise<Client | null> {
     const found = await clientModel.findById(id);
-    return found ? found.toObject() : null;
+    if (!found) return null;
+    
+    const { _id, ...clientData } = found.toObject();
+    return {
+      id: _id.toString(),
+      ...clientData
+    };
   }
 
   async findAll(): Promise<Client[]> {
