@@ -1,0 +1,13 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml
+
+RUN pnpm install
+
+COPY . .
+
+RUN pnpm run build
+
+CMD ["node", "src/index.js"]
