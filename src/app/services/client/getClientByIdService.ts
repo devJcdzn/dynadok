@@ -12,7 +12,14 @@ export class GetClientByIdService {
     const cachedKey = `client:${id}`;
     const cachedClient = await this.redisClient.get(cachedKey);
 
-    if (cachedClient) return JSON.parse(cachedClient);
+    if (cachedClient) {
+      const parsed = JSON.parse(cachedClient);
+      return {
+        ...parsed,
+        createdAt: new Date(parsed.createdAt),
+        updatedAt: new Date(parsed.updatedAt),
+      };
+    }
 
     const client = await this.clientRepository.findById(id);
 
