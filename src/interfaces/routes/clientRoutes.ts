@@ -13,10 +13,10 @@ const repository = new ClientRepository();
 const redisClient = new RedisConfig();
 
 const controller = new ClientController(
-  new CreateClientService(repository),
-  new UpdateClientService(repository),
+  new CreateClientService(repository, redisClient),
+  new UpdateClientService(repository, redisClient),
   new GetClientByIdService(repository, redisClient),
-  new ListClientsByIdService(repository)
+  new ListClientsByIdService(repository, redisClient)
 );
 
 router.post("/clients", async (req: Request, res: Response) => {
