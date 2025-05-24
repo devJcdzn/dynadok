@@ -8,7 +8,7 @@ export class GetClientByIdService {
     private redisClient: IRedisRepository
   ) {}
 
-  async execute(id: string): Promise<Client> {
+  async execute(id: string): Promise<Client | null> {
     const cachedKey = `client:${id}`;
     const cachedClient = await this.redisClient.get(cachedKey);
 
