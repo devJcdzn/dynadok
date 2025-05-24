@@ -10,7 +10,7 @@ services:
       - redis
       - rabbitmq
     environment:
-      - MONGO_URL=//mongodb:27017/clients
+      - MONGO_URI=//mongodb:27017/clients
       - REDIS_URL=//redis:6379
       - RABBITMQ_URL=amqp://rabbitmq
 
