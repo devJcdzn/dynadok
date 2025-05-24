@@ -16,8 +16,8 @@ export class GetClientByIdService {
 
     const client = await this.clientRepository.findById(id);
 
-    await this.redisClient.set(cachedKey, JSON.stringify(client));
-    
+    await this.redisClient.set(cachedKey, JSON.stringify(client), 60 * 5);
+
     return client;
   }
 }
