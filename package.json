@@ -13,6 +13,7 @@
   "packageManager": "pnpm@10.10.0",
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@types/amqplib": "^0.10.7",
     "@types/express": "^5.0.2",
     "@types/node": "^22.15.21",
     "tsx": "^4.19.4",
