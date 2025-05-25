@@ -1,3 +1,4 @@
+import { NotFoundError } from "../../../../core/errors/notFoundError";
 import { Client } from "../../../../domain/entities/Client";
 import { IBaseRepository } from "../../../../shared/base/baseRepository";
 import { clientModel } from "../ClientModel";
@@ -18,7 +19,7 @@ export class ClientRepository implements IBaseRepository<Client> {
     });
 
     if (!updated) {
-      throw new Error(`Client with id ${id} not found`);
+      throw new NotFoundError("Cliente");
     }
 
     return {
