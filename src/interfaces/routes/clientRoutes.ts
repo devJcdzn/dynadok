@@ -3,7 +3,7 @@ import { ClientRepository } from "../../infra/db/mongodb/repositories/mongoClien
 import { ClientController } from "../controllers/clientController";
 import { CreateClientService } from "../../app/services/client/createClientService";
 import { UpdateClientService } from "../../app/services/client/updateClientService";
-import { GetClientByIdService } from "../../app/services/client/getClientByIdService.spec";
+import { GetClientByIdService } from "../../app/services/client/getClientByIdService";
 import { ListClientsByIdService } from "../../app/services/client/listClientsService";
 import { RedisConfig } from "../../infra/db/redis/config";
 
