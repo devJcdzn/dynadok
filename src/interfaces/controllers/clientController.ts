@@ -24,10 +24,13 @@ export class ClientController {
       throw new ValidationError("Preencha todos os campos corretamente.");
     }
 
-    await this.createService.execute({ nome, email, telefone });
+    const { id } = await this.createService.execute({ nome, email, telefone });
 
     return response.status(201).send({
       message: "Cliente cadastrado com sucesso.",
+      client: {
+        id,
+      },
     });
   }
 
@@ -45,10 +48,17 @@ export class ClientController {
       );
     }
 
-    await this.updateService.execute(id, { nome, email, telefone });
+    const client = await this.updateService.execute(id, {
+      nome,
+      email,
+      telefone,
+    });
 
     return response.send({
       message: "Cliente atualizado com sucesso.",
+      client: {
+        id: client.id,
+      },
     });
   }
 
