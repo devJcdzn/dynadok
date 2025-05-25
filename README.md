@@ -142,7 +142,7 @@ Os testes são executados também no pipeline CI configurado via GitHub Actions,
 
 ## 🔄 CI/CD
 
-O projeto está configurado para integração contínua e entrega contínua usando GitHub Actions com:
+O projeto está mockado para integração contínua e entrega contínua usando GitHub Actions com:
 
 * **Build e testes automáticos** em cada push e pull request na branch `main`
 * **Build da imagem Docker** após testes aprovados
@@ -219,7 +219,6 @@ jobs:
 ## 📝 TODO
 
 * [x] Implementar Error Handling centralizado
-* [ ] Adicionar validação de entrada com Zod
 * [ ] Adicionar rate limiting (opcional para escalabilidade)
 * [ ] Adicionar documentação Swagger/OpenAPI (opcional para manutenibilidade)
 * [x] Configurar CI/CD básico com testes, build e deploy
