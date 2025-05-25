@@ -2,7 +2,10 @@ version: '3.9'
 
 services:
   api:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    restart: always
     ports:
       - "3000:3000"
     depends_on:
@@ -10,13 +13,9 @@ services:
       - redis
       - rabbitmq
     environment:
-      - MONGO_URI=//mongodb:27017/clients
-      - REDIS_URL=//redis:6379
+      - MONGO_URI=mongodb://mongodb:27017/clients
+      - REDIS_URL=redis://redis:6379
       - RABBITMQ_URL=amqp://rabbitmq
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    command: pnpm start
 
   mongodb:
     image: mongo:6

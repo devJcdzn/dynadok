@@ -1,1 +1,10 @@
 node_modules
+coverage/
+dist
+.env
+*.log
+*.spec.*
+*.test.*
+*.md
+Dockerfile*
+docker-compose*

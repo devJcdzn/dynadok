@@ -1,4 +1,4 @@
-# Dynadok
+# Dynadok - Teste Técnico
 
 API RESTful para gerenciamento de clientes desenvolvida para teste técnico da Dynadok.
 
