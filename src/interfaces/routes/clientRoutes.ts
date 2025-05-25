@@ -39,4 +39,8 @@ router.get("/clients", async (req: Request, res: Response) => {
   await controller.list(req, res);
 });
 
+router.delete("/clients/:id", async (req: Request, res: Response) => {
+  await controller.delete(req, res);
+});
+
 export const clientRoutes = router;
