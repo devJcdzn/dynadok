@@ -34,7 +34,11 @@ describe("UpdateClient Service", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    updateClientService = new UpdateClientService(mockRepo, mockRedis, mockEventBus);
+    updateClientService = new UpdateClientService(
+      mockRepo,
+      mockRedis,
+      mockEventBus
+    );
   });
 
   describe("Successful Update Scenarios", () => {
@@ -115,9 +119,13 @@ describe("UpdateClient Service", () => {
         updatedAt: new Date(),
       };
       (mockRepo.update as Mock).mockResolvedValueOnce(updatedClient);
-      (mockEventBus.publish as Mock).mockRejectedValueOnce(new Error("Event bus error"));
+      (mockEventBus.publish as Mock).mockRejectedValueOnce(
+        new Error("Event bus error")
+      );
 
-      await expect(updateClientService.execute(clientId, updateData)).rejects.toThrow("Event bus error");
+      await expect(
+        updateClientService.execute(clientId, updateData)
+      ).rejects.toThrow("Event bus error");
     });
   });
 
@@ -160,7 +168,9 @@ describe("UpdateClient Service", () => {
       (mockRepo.update as Mock).mockResolvedValueOnce(updatedClient);
       (mockRedis.del as Mock).mockRejectedValueOnce(new Error("Redis error"));
 
-      await expect(updateClientService.execute(clientId, updateData)).rejects.toThrow("Redis error");
+      await expect(
+        updateClientService.execute(clientId, updateData)
+      ).rejects.toThrow("Redis error");
     });
   });
 
@@ -169,12 +179,20 @@ describe("UpdateClient Service", () => {
       const error = new Error("Database error");
       (mockRepo.update as Mock).mockRejectedValueOnce(error);
 
-      await expect(updateClientService.execute(clientId, updateData)).rejects.toThrow("Database error");
+      await expect(
+        updateClientService.execute(clientId, updateData)
+      ).rejects.toThrow("Database error");
     });
 
-    it("should handle invalid client ID", async () => {
-      await expect(updateClientService.execute("", updateData)).rejects.toThrow("Client ID is required");
-      await expect(updateClientService.execute(null as any, updateData)).rejects.toThrow("Client ID is required");
+    it("should handle invalid client Id", async () => {
+      await expect(updateClientService.execute("", updateData)).rejects.toThrow(
+        "O id do cliente deve ser enviado com parâmetro da requisicão."
+      );
+      await expect(
+        updateClientService.execute(null as any, updateData)
+      ).rejects.toThrow(
+        "O id do cliente deve ser enviado com parâmetro da requisicão."
+      );
     });
   });
 
