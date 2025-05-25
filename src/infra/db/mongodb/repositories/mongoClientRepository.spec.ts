@@ -82,11 +82,15 @@ describe("ClientRepository", () => {
     expect(found).toBeDefined();
     if (!found) throw new Error("Client not found");
 
-    const deletedId = await repository.delete(found._id.toString());
+    const deleted = await repository.delete(found._id.toString());
 
-    expect(deletedId).toBe(found._id.toString());
+    expect(deleted).toBeDefined();
+    expect(deleted.id).toBe(found._id.toString());
+    expect(deleted.nome).toBe(client.nome);
+    expect(deleted.email).toBe(client.email);
+    expect(deleted.telefone).toBe(client.telefone);
 
-    const check = await clientModel.findById(deletedId);
+    const check = await clientModel.findById(deleted.id);
     expect(check).toBeNull();
   });
 });

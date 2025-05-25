@@ -3,5 +3,5 @@ export interface IBaseRepository<T> {
   update(id: string, item: Partial<T>): Promise<T>;
   findById(id: string): Promise<T>;
   findAll(): Promise<T[]>;
-  delete(id: string): Promise<string>;
+  delete(id: string): Promise<T>;
 }

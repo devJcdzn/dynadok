@@ -46,13 +46,17 @@ export class ClientRepository implements IBaseRepository<Client> {
     return results.map((doc: any) => doc.toObject());
   }
 
-  async delete(id: string): Promise<string> {
+  async delete(id: string): Promise<Client> {
     const result = await clientModel.findByIdAndDelete(id);
 
     if (!result) {
       throw new NotFoundError("Cliente");
     }
 
-    return result._id.toString();
+    const { _id, ...clientData } = result.toObject();
+    return {
+      id: _id.toString(),
+      ...clientData,
+    };
   }
 }
