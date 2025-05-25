@@ -3,6 +3,7 @@ import { CreateClientService } from "../../app/services/client/createClientServi
 import { UpdateClientService } from "../../app/services/client/updateClientService";
 import { GetClientByIdService } from "../../app/services/client/getClientByIdService";
 import { ListClientsByIdService } from "../../app/services/client/listClientsService";
+import { ValidationError } from "../../core/errors/validationError";
 
 export class ClientController {
   constructor(
@@ -20,9 +21,7 @@ export class ClientController {
     };
 
     if (!nome || !email || !telefone) {
-      return response.status(400).send({
-        message: "Preencha todos os campos corretamente.",
-      });
+      throw new ValidationError("Preencha todos os campos corretamente.");
     }
 
     await this.createService.execute({ nome, email, telefone });
@@ -41,9 +40,9 @@ export class ClientController {
     const { id } = request.params;
 
     if (!id) {
-      return response.status(400).send({
-        message: "Por favor envie o id do cliente na requisição.",
-      });
+      throw new ValidationError(
+        "O id do cliente deve ser enviado com parâmetro da requisicão."
+      );
     }
 
     await this.updateService.execute(id, { nome, email, telefone });
@@ -57,9 +56,9 @@ export class ClientController {
     const { id } = request.params;
 
     if (!id) {
-      return response.status(400).send({
-        message: "Por favor, envie o id do cliente nda Requisição",
-      });
+      throw new ValidationError(
+        "O id do cliente deve ser enviado com parâmetro da requisicão."
+      );
     }
 
     const client = await this.getByIdService.execute(id);
