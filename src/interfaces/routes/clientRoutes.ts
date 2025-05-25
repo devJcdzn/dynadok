@@ -7,6 +7,7 @@ import { GetClientByIdService } from "../../app/services/client/getClientByIdSer
 import { ListClientsByIdService } from "../../app/services/client/listClientsService";
 import { RedisConfig } from "../../infra/db/redis/config";
 import { EventBus } from "../../infra/messaging/eventBus";
+import { DeleteClientService } from "../../app/services/client/deleteClientService";
 
 const router = Router();
 
@@ -18,7 +19,8 @@ const controller = new ClientController(
   new CreateClientService(repository, redisClient, eventBus),
   new UpdateClientService(repository, redisClient, eventBus),
   new GetClientByIdService(repository, redisClient),
-  new ListClientsByIdService(repository, redisClient)
+  new ListClientsByIdService(repository, redisClient),
+  new DeleteClientService(repository, redisClient, eventBus)
 );
 
 router.post("/clients", async (req: Request, res: Response) => {

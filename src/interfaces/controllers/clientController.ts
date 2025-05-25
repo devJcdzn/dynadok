@@ -4,13 +4,15 @@ import { UpdateClientService } from "../../app/services/client/updateClientServi
 import { GetClientByIdService } from "../../app/services/client/getClientByIdService";
 import { ListClientsByIdService } from "../../app/services/client/listClientsService";
 import { ValidationError } from "../../core/errors/validationError";
+import { DeleteClientService } from "../../app/services/client/deleteClientService";
 
 export class ClientController {
   constructor(
     private readonly createService: CreateClientService,
     private readonly updateService: UpdateClientService,
     private readonly getByIdService: GetClientByIdService,
-    private readonly listAllService: ListClientsByIdService
+    private readonly listAllService: ListClientsByIdService,
+    private readonly deleteService: DeleteClientService
   ) {}
 
   async create(request: Request, response: Response) {
@@ -83,6 +85,25 @@ export class ClientController {
 
     return response.send({
       clients,
+    });
+  }
+
+  async delete(request: Request, response: Response) {
+    const { id } = request.params;
+
+    if (!id) {
+      throw new ValidationError(
+        "O id do cliente deve ser enviado com parâmetro da requisicão."
+      );
+    }
+
+    const client = await this.deleteService.execute(id);
+
+    return response.send({
+      message: "Cliente deletado com sucesso.",
+      client: {
+        id: client.id,
+      },
     });
   }
 }
