@@ -9,21 +9,52 @@ export class GetClientByIdService {
   ) {}
 
   async execute(id: string): Promise<Client | null> {
-    const cachedKey = `client:${id}`;
-    const cachedClient = await this.redisClient.get(cachedKey);
+    if (!id) {
+      throw new Error("Client ID is required");
+    }
 
-    if (cachedClient) {
-      const parsed = JSON.parse(cachedClient);
-      return {
-        ...parsed,
-        createdAt: new Date(parsed.createdAt),
-        updatedAt: new Date(parsed.updatedAt),
-      };
+    const cachedKey = `client:${id}`;
+
+    try {
+      const cachedClient = await this.redisClient.get(cachedKey);
+
+      if (cachedClient) {
+        try {
+          const parsed = JSON.parse(cachedClient);
+          return {
+            ...parsed,
+            createdAt: new Date(parsed.createdAt),
+            updatedAt: new Date(parsed.updatedAt),
+          };
+        } catch (parseError: unknown) {
+          console.warn(
+            `Failed to parse cached client data: ${
+              parseError instanceof Error ? parseError.message : "Unknown error"
+            }`
+          );
+        }
+      }
+    } catch (redisError: unknown) {
+      console.warn(
+        `Redis error: ${
+          redisError instanceof Error ? redisError.message : "Unknown error"
+        }`
+      );
     }
 
     const client = await this.clientRepository.findById(id);
 
-    await this.redisClient.set(cachedKey, JSON.stringify(client), 60 * 5);
+    if (client) {
+      try {
+        await this.redisClient.set(cachedKey, JSON.stringify(client), 60 * 5);
+      } catch (cacheError: unknown) {
+        console.warn(
+          `Failed to cache client data: ${
+            cacheError instanceof Error ? cacheError.message : "Unknown error"
+          }`
+        );
+      }
+    }
 
     return client;
   }

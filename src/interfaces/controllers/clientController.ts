@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { CreateClientService } from "../../app/services/client/createClientService";
 import { UpdateClientService } from "../../app/services/client/updateClientService";
-import { GetClientByIdService } from "../../app/services/client/getClientByIdService";
+import { GetClientByIdService } from "../../app/services/client/getClientByIdService.spec";
 import { ListClientsByIdService } from "../../app/services/client/listClientsService";
 
 export class ClientController {
