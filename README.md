@@ -28,7 +28,7 @@ API RESTful para gerenciamento de clientes desenvolvida para teste técnico da D
 1. Clone o repositório:
 
 ```bash
-git clone https://github.com/seu-usuario/dynadok.git
+git clone https://github.com/devJcdzn/dynadok.git
 cd dynadok
 ```
 
@@ -195,8 +195,9 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - run: docker build -t yourusername/app-name:latest .
-      - run: docker push yourusername/app-name:latest
+      - run: docker build -t zimhot/a
+dynadok:latest .
+      - run: docker push zimhot/dynadok:latest
 
   deploy:
     needs: docker-build-push
@@ -210,10 +211,10 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            docker pull yourusername/app-name:latest
+            docker pull zimhot/dynadok:latest
             docker stop app-container || true
             docker rm app-container || true
-            docker run -d --name app-container -p 3000:3000 yourusername/app-name:latest
+            docker run -d --name app-container -p 3000:3000 zimhot/dynadok:latest
 ```
 
 ## 📝 TODO
