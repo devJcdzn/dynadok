@@ -32,7 +32,7 @@ export class ClientRepository implements IBaseRepository<Client> {
     const found = await clientModel.findById(id);
     if (!found) {
       throw new NotFoundError("Cliente");
-    };
+    }
 
     const { _id, ...clientData } = found.toObject();
     return {
@@ -44,5 +44,15 @@ export class ClientRepository implements IBaseRepository<Client> {
   async findAll(): Promise<Client[]> {
     const results = await clientModel.find();
     return results.map((doc: any) => doc.toObject());
+  }
+
+  async delete(id: string): Promise<string> {
+    const result = await clientModel.findByIdAndDelete(id);
+
+    if (!result) {
+      throw new NotFoundError("Cliente");
+    }
+
+    return result._id.toString();
   }
 }

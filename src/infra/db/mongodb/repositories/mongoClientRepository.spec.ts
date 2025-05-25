@@ -26,11 +26,7 @@ describe("ClientRepository", () => {
   });
 
   it("should create a client", async () => {
-    const client = new Client(
-      "John Doe",
-      "j.doe@example.com",
-      "1234567890"
-    );
+    const client = new Client("John Doe", "j.doe@example.com", "1234567890");
 
     await repository.create(client);
     const created = await clientModel.findOne({ email: client.email });
@@ -39,11 +35,7 @@ describe("ClientRepository", () => {
   });
 
   it("should update a client", async () => {
-    const client = new Client(
-      "Name",
-      "old@example.com",
-      "0000000000"
-    );
+    const client = new Client("Name", "old@example.com", "0000000000");
     await repository.create(client);
 
     const found = await clientModel.findOne({ email: client.email });
@@ -59,11 +51,7 @@ describe("ClientRepository", () => {
   });
 
   it("should find client by id", async () => {
-    const client = new Client(
-      "Find",
-      "find@example.com",
-      "9999999999"
-    );
+    const client = new Client("Find", "find@example.com", "9999999999");
     await repository.create(client);
 
     const found = await clientModel.findOne({ email: client.email });
@@ -75,21 +63,30 @@ describe("ClientRepository", () => {
   });
 
   it("should return all clients", async () => {
-    const client1 = new Client(
-      "Client One",
-      "one@example.com",
-      "1111111111"
-    );
-    const client2 = new Client(
-      "Client Two",
-      "two@example.com",
-      "2222222222"
-    );
+    const client1 = new Client("Client One", "one@example.com", "1111111111");
+    const client2 = new Client("Client Two", "two@example.com", "2222222222");
 
     await repository.create(client1);
     await repository.create(client2);
 
     const all = await repository.findAll();
     expect(all).toHaveLength(2);
+  });
+
+  it("should delete a client by id", async () => {
+    const client = new Client("Delete Me", "delete@example.com", "8888888888");
+
+    await repository.create(client);
+
+    const found = await clientModel.findOne({ email: client.email });
+    expect(found).toBeDefined();
+    if (!found) throw new Error("Client not found");
+
+    const deletedId = await repository.delete(found._id.toString());
+
+    expect(deletedId).toBe(found._id.toString());
+
+    const check = await clientModel.findById(deletedId);
+    expect(check).toBeNull();
   });
 });
