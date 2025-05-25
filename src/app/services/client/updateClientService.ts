@@ -1,3 +1,4 @@
+import { ValidationError } from "../../../core/errors/validationError";
 import { Client } from "../../../domain/entities/Client";
 import { IRedisRepository } from "../../../domain/repositories/redisRepository";
 import { EventBus } from "../../../infra/messaging/eventBus";
@@ -17,7 +18,9 @@ export class UpdateClientService {
 
   async execute(id: string, data: Partial<Client>): Promise<Client> {
     if (!id) {
-      throw new Error("Client ID is required");
+      throw new ValidationError(
+        "O id do cliente deve ser enviado com parâmetro da requisicão."
+      );
     }
 
     const updated = await this.clientRepository.update(id, data);

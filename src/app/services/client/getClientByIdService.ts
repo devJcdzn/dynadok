@@ -1,3 +1,4 @@
+import { ValidationError } from "../../../core/errors/validationError";
 import { Client } from "../../../domain/entities/Client";
 import { IRedisRepository } from "../../../domain/repositories/redisRepository";
 import { IBaseRepository } from "../../../shared/base/baseRepository";
@@ -9,10 +10,6 @@ export class GetClientByIdService {
   ) {}
 
   async execute(id: string): Promise<Client | null> {
-    if (!id) {
-      throw new Error("Client ID is required");
-    }
-
     const cachedKey = `client:${id}`;
 
     try {

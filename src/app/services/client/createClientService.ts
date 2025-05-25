@@ -25,8 +25,8 @@ export class CreateClientService {
     const created = await this.clientRepository.create(client);
 
     await this.clientCreatedProducer.publish({
-      id: created.id, //TODO: returns id to repository
-      name: created.nome, // Return from database
+      id: created.id,
+      name: created.nome,
     });
 
     await this.redisClient.del("clients:all");
