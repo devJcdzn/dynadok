@@ -151,7 +151,7 @@ O sistema utiliza Redis para cache com as seguintes chaves:
 
 - [ ] Implementar Error Handling centralizado
 - [ ] Adicionar validação de entrada com Zod
-- [ ] Adicionar rate limiting(opicional para escalabilizade);
+- [ ] Adicionar rate limiting(opicional para escalabilidade);
 - [ ] Adicionar documentação Swagger/OpenAPI(opicional para manutenibilidade)
 - [ ] Configurar CI/CD
 - [x] Adicionar testes de integração
