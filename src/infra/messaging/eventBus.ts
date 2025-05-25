@@ -10,6 +10,8 @@ export class EventBus {
     this.connection = await amqplib.connect(url);
     this.channel = await this.connection.createChannel();
 
+    console.log("RabbitMQ Connected 🚀")
+
     return this.channel;
   }
 

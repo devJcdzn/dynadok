@@ -13,7 +13,18 @@ export class ClientEventsConsumer {
         if (msg) {
           const data = JSON.parse(msg.content.toString());
           console.log(`👂 Event received on ${queue}:`, data);
-          // Aqui você pode executar lógica especializada por tipo de evento
+
+          switch (queue) {
+            case "client.created":
+              console.log("🔥 Ação para criação do cliente...");
+              break;
+            case "client.updated":
+              console.log("🔥 Ação para atualizaçãos do cliente...");
+              break;
+            case "client.deleted":
+              console.log("🔥 Ação para deleção do cliente...");
+              break;
+          }
           channel.ack(msg);
         }
       });

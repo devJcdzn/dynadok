@@ -9,5 +9,7 @@ export class ClientCreatedProducer
 
   async publish(event: { id: string; name: string }): Promise<void> {
     await this.eventBus.publish("client.created", event);
+
+    console.log(`⬆️ Client created event published: `, event);
   }
 }
