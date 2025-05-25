@@ -6,15 +6,17 @@ import { UpdateClientService } from "../../app/services/client/updateClientServi
 import { GetClientByIdService } from "../../app/services/client/getClientByIdService";
 import { ListClientsByIdService } from "../../app/services/client/listClientsService";
 import { RedisConfig } from "../../infra/db/redis/config";
+import { EventBus } from "../../infra/messaging/eventBus";
 
 const router = Router();
 
 const repository = new ClientRepository();
 const redisClient = new RedisConfig();
+const eventBus = new EventBus();
 
 const controller = new ClientController(
-  new CreateClientService(repository, redisClient),
-  new UpdateClientService(repository, redisClient),
+  new CreateClientService(repository, redisClient, eventBus),
+  new UpdateClientService(repository, redisClient, eventBus),
   new GetClientByIdService(repository, redisClient),
   new ListClientsByIdService(repository, redisClient)
 );
