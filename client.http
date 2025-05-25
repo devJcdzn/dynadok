@@ -1,0 +1,26 @@
+### CREATE a Client
+POST http://localhost:3000/clients
+Content-Type: application/json
+
+{
+    "nome": "John Doe",
+    "email": "j.doe@gmail.com",
+    "telefone": "11223344556"
+}
+
+### UPDATE a Client
+PUT http://localhost:3000/clients/:id
+Content-Type: application/json
+
+{
+    "email": "j.edited@email.com"
+}
+
+### GET All Clients
+GET http://localhost:3000/clients
+
+### GET Client by Id
+GET http://localhost:3000/clients/:id
+
+### DELETE Client by Id
+DELETE  http://localhost:3000/clients/:id
