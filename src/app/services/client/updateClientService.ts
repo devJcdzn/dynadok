@@ -9,6 +9,10 @@ export class UpdateClientService {
   ) {}
 
   async execute(id: string, data: Partial<Client>): Promise<void> {
+    if (!id) {
+      throw new Error("Client ID is required");
+    }
+
     await this.clientRepository.update(id, data);
 
     await this.redisClient.del(`client:${id}`);
