@@ -3,24 +3,38 @@ import { IBaseRepository } from "../../../../shared/base/baseRepository";
 import { clientModel } from "../ClientModel";
 
 export class ClientRepository implements IBaseRepository<Client> {
-  async create(item: Client): Promise<void> {
-    await clientModel.create(item);
+  async create(item: Client): Promise<Client> {
+    const client = await clientModel.create(item);
+    const { _id, ...clientData } = client.toObject();
+    return {
+      id: _id.toString(),
+      ...clientData,
+    };
   }
 
-  async update(id: string, item: Partial<Client>): Promise<void> {
+  async update(id: string, item: Partial<Client>): Promise<Client> {
     const updated = await clientModel.findByIdAndUpdate(id, item, {
       new: true,
     });
+
+    if (!updated) {
+      throw new Error(`Client with id ${id} not found`);
+    }
+
+    return {
+      id: updated._id.toString(),
+      ...updated,
+    };
   }
 
   async findById(id: string): Promise<Client | null> {
     const found = await clientModel.findById(id);
     if (!found) return null;
-    
+
     const { _id, ...clientData } = found.toObject();
     return {
       id: _id.toString(),
-      ...clientData
+      ...clientData,
     };
   }
 
