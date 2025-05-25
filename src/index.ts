@@ -4,6 +4,7 @@ import { connectToDatabase } from "./infra/db/mongodb/connection";
 import { config } from "dotenv";
 import { ClientEventsConsumer } from "./infra/messaging/consumers/clientEventsConsumer";
 import { EventBus } from "./infra/messaging/eventBus";
+import { errorHandler } from "./shared/middlewares/errorHandler";
 
 config();
 
@@ -11,6 +12,17 @@ const app = express();
 
 app.use(express.json());
 app.use(clientRoutes);
+
+app.use(
+  (
+    err: Error,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    errorHandler(err, req, res, next);
+  }
+);
 
 const PORT = process.env.PORT || 3000;
 
