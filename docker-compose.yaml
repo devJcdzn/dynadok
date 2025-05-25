@@ -1,18 +1,22 @@
 version: '3.9'
 
 services:
-  # api:
-    # build: .
-    # ports:
-    #   - "3000:3000"
-    # depends_on:
-    #   - mongodb
-    #   - redis
-    #   - rabbitmq
-    # environment:
-    #   - MONGO_URI=//mongodb:27017/clients
-    #   - REDIS_URL=//redis:6379
-    #   - RABBITMQ_URL=amqp://rabbitmq
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+      - redis
+      - rabbitmq
+    environment:
+      - MONGO_URI=//mongodb:27017/clients
+      - REDIS_URL=//redis:6379
+      - RABBITMQ_URL=amqp://rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: pnpm start
 
   mongodb:
     image: mongo:6

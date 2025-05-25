@@ -1,6 +1,6 @@
 # Dynadok
 
-API RESTful para gerenciamento de clientes com arquitetura limpa, utilizando TypeScript, MongoDB, Redis e RabbitMQ.
+API RESTful para gerenciamento de clientes desenvolvida para teste técnico da Dynadok.
 
 ## 🚀 Tecnologias
 
@@ -117,11 +117,12 @@ pnpm test
 
 ```
 src/
-├── app/              # Casos de uso e serviços
-├── domain/           # Entidades e regras de negócio
-├── infra/           # Implementações de infraestrutura
-├── interfaces/      # Controllers e rotas
-└── shared/          # Código compartilhado
+├── app/               # Casos de uso e serviços
+├── core/              # Handlers e core services
+├── domain/            # Entidades e regras de negócio
+├── infra/             # Implementações de infraestrutura
+├── interfaces/        # Controllers e rotas
+└── shared/            # Código compartilhado
 ```
 
 ## 🔄 Eventos
@@ -139,17 +140,9 @@ O sistema utiliza Redis para cache com as seguintes chaves:
 - `client:{id}`: Cache de cliente individual (TTL: 5 minutos)
 - `clients:all`: Cache da lista de clientes (TTL: 5 minutos)
 
-## 🤝 Contribuindo
-
-1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
 ## 📝 TODO
 
-- [ ] Implementar Error Handling centralizado
+- [x] Implementar Error Handling centralizado
 - [ ] Adicionar validação de entrada com Zod
 - [ ] Adicionar rate limiting(opicional para escalabilidade);
 - [ ] Adicionar documentação Swagger/OpenAPI(opicional para manutenibilidade)
