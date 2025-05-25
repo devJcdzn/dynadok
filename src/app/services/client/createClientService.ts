@@ -1,28 +1,36 @@
 import { Client } from "../../../domain/entities/Client";
 import { IRedisRepository } from "../../../domain/repositories/redisRepository";
 import { IBaseRepository } from "../../../shared/base/baseRepository";
-import { publishClientCreated } from "../../../infra/messaging/producers/clientProducer";
+import { ClientCreatedProducer } from "../../../infra/messaging/producers/clientCreateProducer";
+import { EventBus } from "../../../infra/messaging/eventBus";
 
 export class CreateClientService {
+  private clientCreatedProducer: ClientCreatedProducer;
+
   constructor(
     private readonly clientRepository: IBaseRepository<Client>,
-    private readonly redisClient: IRedisRepository
-  ) {}
+    private readonly redisClient: IRedisRepository,
+    private eventBus: EventBus
+  ) {
+    this.clientCreatedProducer = new ClientCreatedProducer(eventBus);
+  }
 
   async execute({
     nome,
     email,
     telefone,
-  }: Omit<Client, "id" | "createdAt" | "updatedAt">): Promise<void> {
+  }: Omit<Client, "id" | "createdAt" | "updatedAt">): Promise<Client> {
     const client = new Client(nome, email, telefone);
 
-    await this.clientRepository.create(client);
+    const created = await this.clientRepository.create(client);
 
-    await publishClientCreated({
-      id: client.id,
-      name: client.nome,
+    await this.clientCreatedProducer.publish({
+      id: created.id, //TODO: returns id to repository
+      name: created.nome, // Return from database
     });
 
     await this.redisClient.del("clients:all");
+
+    return created;
   }
 }

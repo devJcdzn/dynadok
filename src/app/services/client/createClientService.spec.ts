@@ -3,6 +3,7 @@ import { CreateClientService } from "./createClientService";
 import { IBaseRepository } from "../../../shared/base/baseRepository";
 import { Client } from "../../../domain/entities/Client";
 import { IRedisRepository } from "../../../domain/repositories/redisRepository";
+import { EventBus } from "../../../infra/messaging/eventBus";
 
 const mockRepo: IBaseRepository<Client> = {
   create: vi.fn().mockImplementation(() => Promise.resolve()),
@@ -17,6 +18,10 @@ const mockRedis = {
   del: vi.fn().mockImplementation(() => Promise.resolve()),
 } as unknown as IRedisRepository;
 
+const mockEventBus = {
+  publish: vi.fn().mockImplementation(() => Promise.resolve()),
+} as unknown as EventBus;
+
 describe("CreateClient Service", async () => {
   const client = {
     nome: "John Doe",
@@ -28,10 +33,18 @@ describe("CreateClient Service", async () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    clientService = new CreateClientService(mockRepo, mockRedis);
+    clientService = new CreateClientService(mockRepo, mockRedis, mockEventBus);
   });
 
   it("should create a client successfully", async () => {
+    const createdClient = {
+      id: "123",
+      ...client,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    (mockRepo.create as Mock).mockResolvedValueOnce(createdClient);
+
     await clientService.execute(client);
   
     expect(mockRepo.create).toHaveBeenCalledWith(
@@ -43,7 +56,32 @@ describe("CreateClient Service", async () => {
     );
   });
 
+  it("should publish client created event", async () => {
+    const createdClient = {
+      id: "123",
+      ...client,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    (mockRepo.create as Mock).mockResolvedValueOnce(createdClient);
+
+    await clientService.execute(client);
+
+    expect(mockEventBus.publish).toHaveBeenCalledWith("client.created", {
+      id: "123",
+      name: "John Doe",
+    });
+  });
+
   it("should invalidate the clients cache after creating a new client", async () => {
+    const createdClient = {
+      id: "123",
+      ...client,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    (mockRepo.create as Mock).mockResolvedValueOnce(createdClient);
+
     await clientService.execute(client);
 
     expect(mockRedis.del).toHaveBeenCalledWith("clients:all");
@@ -55,6 +93,13 @@ describe("CreateClient Service", async () => {
       email: "j.doe@email.com",
       telefone: "11223344556",
     };
+    const createdClient = {
+      id: "123",
+      ...minimalClient,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    (mockRepo.create as Mock).mockResolvedValueOnce(createdClient);
 
     await clientService.execute(minimalClient);
 
@@ -71,10 +116,31 @@ describe("CreateClient Service", async () => {
   });
 
   it("should handle Redis cache invalidation errors gracefully", async () => {
+    const createdClient = {
+      id: "123",
+      ...client,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    (mockRepo.create as Mock).mockResolvedValueOnce(createdClient);
     const error = new Error("Redis error");
     (mockRedis.del as Mock).mockRejectedValueOnce(error);
 
     await expect(clientService.execute(client)).rejects.toThrow("Redis error");
+  });
+
+  it("should handle event publishing errors gracefully", async () => {
+    const createdClient = {
+      id: "123",
+      ...client,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    (mockRepo.create as Mock).mockResolvedValueOnce(createdClient);
+    const error = new Error("Event publishing error");
+    (mockEventBus.publish as Mock).mockRejectedValueOnce(error);
+
+    await expect(clientService.execute(client)).rejects.toThrow("Event publishing error");
   });
 
   it("should create a client with special characters in name", async () => {
@@ -82,6 +148,13 @@ describe("CreateClient Service", async () => {
       ...client,
       nome: "João da Silva",
     };
+    const createdClient = {
+      id: "123",
+      ...clientWithSpecialChars,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    (mockRepo.create as Mock).mockResolvedValueOnce(createdClient);
 
     await clientService.execute(clientWithSpecialChars);
 
@@ -97,6 +170,13 @@ describe("CreateClient Service", async () => {
       ...client,
       telefone: "(11) 2233-4455",
     };
+    const createdClient = {
+      id: "123",
+      ...clientWithFormattedPhone,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    (mockRepo.create as Mock).mockResolvedValueOnce(createdClient);
 
     await clientService.execute(clientWithFormattedPhone);
 
